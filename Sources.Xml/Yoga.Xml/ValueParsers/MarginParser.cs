@@ -1,47 +1,35 @@
 ﻿namespace Yoga.Xml
 {
 	using Facebook.Yoga;
-	using System.Collections.Generic;
 
-	public class MarginParser : ValueParser<YogaValue[]>
+	public class MarginParser : ArrayParser<YogaValue>
 	{
-		public MarginParser()
+		public MarginParser(): base(new YogaValueParser())
 		{
-			this.valueParser = new YogaValueParser();
 		}
-
-		private YogaValueParser valueParser;
 
 		public override bool TryParse(string value, out YogaValue[] output)
 		{
-			var list = new List<YogaValue>();
-			var splits = value.Split(',');
-			foreach (var item in splits)
+			if(base.TryParse(value, out output))
 			{
-				YogaValue v;
-				if (!valueParser.TryParse(item, out v))
+				switch (output.Length)
 				{
-					output = null;
-					return false;
+					case 1:
+						output = new[] { output[0], output[0], output[0], output[0] };
+						break;
+					case 2:
+					case 3:
+						output = new[] { output[0], output[1], output[0], output[1] };
+						break;
+					default:
+						output = new[] { output[0], output[1], output[2], output[3] };
+						break;
 				}
-				list.Add(v);
+
+				return true;
 			}
 
-			switch (list.Count)
-			{
-				case 1: 
-					output = new[] { list[0], list[0], list[0], list[0] }; 
-					break;
-				case 2:
-				case 3: 
-					output = new[] { list[0], list[1], list[0], list[1] }; 
-					break;
-				default: 
-					output = new[] { list[0], list[1], list[2], list[3] }; 
-					break;
-			}
-
-			return true;
+			return false;
 		}
 	}
 }

@@ -40,6 +40,7 @@
     <Compile Include="YogaParserExtensions.cs" />
     <Compile Include="Renderers\IXmlRenderer.cs" />
     <Compile Include="Renderers\XmlRenderer.cs" />
+    <Compile Include="ValueParsers\ArrayParser.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Facebook.Yoga">
