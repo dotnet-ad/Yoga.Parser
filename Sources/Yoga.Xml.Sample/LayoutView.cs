@@ -1,17 +1,15 @@
 ﻿namespace Yoga.Parser.Sample
 {
-	using System.IO;
 	using System.Reflection;
 	using Facebook.Yoga;
 	using System.Collections.Generic;
 
 	public class LayoutView : IView
 	{
-		public LayoutView( float density = 1.0f)
+		public LayoutView(IYogaParser parser)
 		{
-			this.parser = new YogaParser();
-			this.parser.RegisterValueParser(new YogaValueParser(density));
-			this.parser.RegisterValueParser(new ColorParser());
+			this.parser = parser;
+			this.parser.RegisterConverter(ColorConverters.FromString());
 		}
 
 		public void Load(string name)
@@ -19,10 +17,8 @@
 			this.Id = name;
 			var assembly = typeof(LayoutView).GetTypeInfo().Assembly;
 			using (var stream = assembly.GetManifestResourceStream($"{assembly.GetName().Name}.Layouts.{name}"))
-			using (var reader = new StreamReader(stream))
 			{
-				var xml = reader.ReadToEnd();
-				this.node = this.parser.Parse(xml);
+				this.node = this.parser.Read(stream);
 				CalculateLayout();
 			}
 		}
@@ -33,7 +29,7 @@
 
 		private List<IView> views;
 
-		private YogaParser parser;
+		private IYogaParser parser;
 
 		private Rectangle frame;
 
@@ -68,7 +64,7 @@
 			where T : IView
 			where TImpl : T
 		{
-			this.parser.Register(new ViewRenderer<T, TImpl>());
+			this.parser.RegisterNodeRenderer(new ViewRenderer<T, TImpl>(this.parser));
 		}
 
 		#region Layout

@@ -2,7 +2,7 @@
 {
 	using System;
 
-	public interface IRenderer
+	public interface INodeRenderer
 	{
 		string Name { get; }
 

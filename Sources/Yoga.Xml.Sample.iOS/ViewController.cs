@@ -43,9 +43,14 @@
 		{
 			base.ViewDidLoad();
 
-			this.layout = new LayoutView();
+			const bool json = true;
+
+			var parser = json ? new YogaJsonParser() : (IYogaParser)new YogaXmlParser();
+			var ext = json ? "json" : "xml"; 
+
+			this.layout = new LayoutView(parser);
 			this.layout.RegisterRenderer<IView, YogaView>();
-			this.layout.Load("Sample.xml");
+			this.layout.Load($"Sample.{ext}");
 
  			foreach (var view in this.layout.Views)
 			{

@@ -1,31 +1,23 @@
 ﻿namespace Yoga.Parser.Sample
 {
-	using System;
-
-	public class ColorParser : ValueParser<Color>
+	public static class ColorConverters
 	{
-		public override bool TryParse(string value, out Color output)
-		{
-			switch (value)
-			{
-				case "Gray":
-					output = new Color(246, 247, 249);
-					break;
+		public static IValueConverter<string, Color> FromString() => new RelayValueConverter<string, Color>((input) =>
+		 {
+			 switch (input)
+			 {
+				 case "Gray":
+					 return (true, new Color(246, 247, 249));
 
-				case "Green":
-					output = new Color(151, 220, 207);
-					break;
+				 case "Green":
+					 return (true, new Color(151, 220, 207));
 
-				case "Black":
-					output = new Color(48, 56, 70);
-					break;
+				 case "Black":
+					 return (true, new Color(48, 56, 70));
 
-				default:
-					output = new Color(255, 255, 255);
-					break;
-			}
-
-			return true;
-		}
+				 default:
+					 return (true, new Color(255, 255, 255));
+			 }
+		 });
 	}
 }

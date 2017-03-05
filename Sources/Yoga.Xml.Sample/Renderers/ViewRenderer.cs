@@ -1,12 +1,12 @@
 ﻿namespace Yoga.Parser.Sample
 {
-	public class ViewRenderer<TView, TImpl> : XmlRenderer<TView, TImpl>
+	public class ViewRenderer<TView, TImpl> : NodeRenderer<TView, TImpl>
 		where TView : IView
 		where TImpl : TView
 	{
-		public ViewRenderer()
+		public ViewRenderer(IYogaParser parser) : base(parser)
 		{
-			this.RegisterAllTypeProperties(nameof(IView.Frame));
+			this.RegisterAllTypePropertyRenderers(nameof(IView.Frame));
 		}
 	}
 }

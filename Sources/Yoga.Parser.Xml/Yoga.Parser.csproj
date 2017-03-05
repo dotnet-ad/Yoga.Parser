@@ -27,35 +27,54 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="YogaParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ValueParsers\IValueParser.cs" />
-    <Compile Include="ValueParsers\ConvertParser.cs" />
-    <Compile Include="ValueParsers\EnumParser.cs" />
-    <Compile Include="ValueParsers\MarginParser.cs" />
-    <Compile Include="ValueParsers\YogaValueParser.cs" />
-    <Compile Include="ValueParsers\ValueParser.cs" />
+    <Compile Include="ValueConverters\IValueConverter.cs" />
+    <Compile Include="ValueConverters\BaseConverters.cs" />
+    <Compile Include="ValueConverters\EnumConverters.cs" />
+    <Compile Include="ValueConverters\YogaValueConverters.cs" />
+    <Compile Include="ValueConverters\ValueConverter.cs" />
     <Compile Include="IYogaParser.cs" />
     <Compile Include="YogaParserExtensions.cs" />
-    <Compile Include="Renderers\IRenderer.cs" />
-    <Compile Include="Renderers\Renderer.cs" />
-    <Compile Include="ValueParsers\ArrayParser.cs" />
-    <Compile Include="Nodes\INode.cs" />
-    <Compile Include="Nodes\XmlNode.cs" />
-    <Compile Include="Renderers\YogaNodeRenderer.cs" />
+    <Compile Include="NodeRenderers\INodeRenderer.cs" />
+    <Compile Include="NodeRenderers\NodeRenderer.cs" />
+    <Compile Include="ValueConverters\ArrayConverters.cs" />
+    <Compile Include="NodeRenderers\YogaNodeRenderer.cs" />
+    <Compile Include="PropertyRenderers\IPropertyRenderer.cs" />
+    <Compile Include="PropertyRenderers\TypePropertyRenderer.cs" />
+    <Compile Include="NodeRenderers\NodeRendererExtensions.cs" />
+    <Compile Include="PropertyRenderers\MarginPropertyRenderer.cs" />
+    <Compile Include="YogaParser.cs" />
+    <Compile Include="Xml\YogaXmlParser.cs" />
+    <Compile Include="INode.cs" />
+    <Compile Include="Xml\XmlNode.cs" />
+    <Compile Include="Json\JsonNode.cs" />
+    <Compile Include="Json\YogaJsonParser.cs" />
+    <Compile Include="Binary\BinaryNode.cs" />
+    <Compile Include="Binary\YogaBinaryParser.cs" />
+    <Compile Include="ValueConverters\ChainValueConverter.cs" />
+    <Compile Include="ValueConverters\RelayValueConverter.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Facebook.Yoga">
       <HintPath>..\packages\Facebook.Yoga.1.3.0-pre1\lib\netstandard\Facebook.Yoga.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\portable-net45+win8+wpa81+wp8\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ValueTuple">
+      <HintPath>..\packages\System.ValueTuple.4.3.1\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="ValueParsers\" />
-    <Folder Include="Renderers\" />
-    <Folder Include="Nodes\" />
+    <Folder Include="ValueConverters\" />
+    <Folder Include="NodeRenderers\" />
+    <Folder Include="PropertyRenderers\" />
+    <Folder Include="Xml\" />
+    <Folder Include="Json\" />
+    <Folder Include="Binary\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
 </Project>

@@ -6,13 +6,23 @@
 
 	public interface IYogaParser
 	{
-		YogaNode Parse(Stream stream);
+		YogaNode Read(Stream stream);
 
-		object ParseValue(string value, Type type);
+		void Write(Stream stream, INode node);
+
+		object ConvertValue(object value, Type type);
+
+		object ConvertValue(object v, params Type[] destinations);
+
+		void RegisterConverter<TSource,TDestination>(IValueConverter<TSource,TDestination> converter);
+
+		IValueConverter<TSource, TDestination> GetConverter<TSource, TDestination>();
+
+		void RegisterNodeRenderer(INodeRenderer renderer);
 	}
 
 	public static class IYogaParserExtensions
 	{
-		public static T ParseValue<T>(this IYogaParser parser, string value) => (T)parser.ParseValue(value, typeof(T));
+		public static T ConvertValue<T>(this IYogaParser parser, object value) => (T)parser.ConvertValue(value, typeof(T));
 	}
 }

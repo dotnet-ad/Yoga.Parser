@@ -1,61 +1,88 @@
 ﻿namespace Yoga.Parser
 {
 	using System.IO;
-	using System.Xml.Linq;
 	using Facebook.Yoga;
 	using System;
 	using System.Linq;
 	using System.Collections.Generic;
 	using System.Reflection;
 
-	public class YogaParser : IYogaParser
+	public abstract class YogaParser : IYogaParser
 	{
 		#region Constructors
 
-		public YogaParser()
+		public YogaParser(float density = 1)
 		{
-			// Renderers
-			this.Register(nodeRenderer);
+			this.nodeRenderer = new YogaNodeRenderer(this);
 
-			// Value parsers
-			this.RegisterValueParser(new ConvertParser<float>());
-			this.RegisterValueParser(new ConvertParser<int>());
-			this.RegisterValueParser(new ConvertParser<string>());
-			this.RegisterValueParser(new YogaValueParser());
-			this.RegisterValueParser(new MarginParser());
-			this.RegisterValueParser(new EnumParser<YogaUnit>());
-			this.RegisterValueParser(new EnumParser<YogaEdge>());
-			this.RegisterValueParser(new EnumParser<YogaWrap>());
-			this.RegisterValueParser(new EnumParser<YogaAlign>());
-			this.RegisterValueParser(new EnumParser<YogaJustify>());
-			this.RegisterValueParser(new EnumParser<YogaOverflow>());
-			this.RegisterValueParser(new EnumParser<YogaDisplay>());
-			this.RegisterValueParser(new EnumParser<YogaDimension>());
-			this.RegisterValueParser(new EnumParser<YogaDirection>());
-			this.RegisterValueParser(new EnumParser<YogaPositionType>());
-			this.RegisterValueParser(new EnumParser<YogaFlexDirection>());
+			// Renderers
+			this.RegisterNodeRenderer(nodeRenderer);
+
+			// Array converter
+			this.RegisterConverter(ArrayConverters.Split());
+
+			// Base value converter
+			this.RegisterCastConverter<int, float>();
+			this.RegisterCastConverter<float, int>();
+			this.RegisterCastConverter<string, int>();
+			this.RegisterCastConverter<string, float>();
+			this.RegisterCastConverter<string, bool>();
+
+			// Enum value converters
+			this.RegisterEnumConverter<YogaUnit>();
+			this.RegisterEnumConverter<YogaEdge>();
+			this.RegisterEnumConverter<YogaWrap>();
+			this.RegisterEnumConverter<YogaAlign>();
+			this.RegisterEnumConverter<YogaJustify>();
+			this.RegisterEnumConverter<YogaOverflow>();
+			this.RegisterEnumConverter<YogaDisplay>();
+			this.RegisterEnumConverter<YogaDimension>();
+			this.RegisterEnumConverter<YogaPositionType>();
+			this.RegisterEnumConverter<YogaFlexDirection>();
+
+			// Yoga value converters
+			this.RegisterConverter(YogaValueConverters.FromFloat(density));
+			this.RegisterConverter(YogaValueConverters.FromInt(density));
+			this.RegisterConverter(YogaValueConverters.FromString(density));
 		}
 
 		#endregion
 
 		#region Stream parsing
 
-		public YogaNode Parse(Stream stream)
-		{
-			var root = XElement.Load(stream);
-			return Parse(root as XElement);
+		protected abstract INode ReadNode(Stream stream);
 
+		public YogaNode Read(Stream stream)
+		{
+			var inode = ReadNode(stream);
+			return ParseNode(inode);
+		}
+
+		public YogaNode ParseNode(INode node)
+		{
+			var result = nodeRenderer.Render(node);
+
+			var dataRenderer = this.GetRenderer(node.Name);
+			result.Data = dataRenderer.Render(node);
+
+			foreach (var item in node.Children)
+			{
+				var child = ParseNode(item);
+				result.Insert(result.Count, child);
+			}
+
+			return result;
 		}
 
 		#endregion
 
 		#region Renderers
 
-		private YogaNodeRenderer nodeRenderer = new YogaNodeRenderer();
+		protected YogaNodeRenderer nodeRenderer;
 
-		private List<IRenderer> renderers = new List<IRenderer>();
+		private List<INodeRenderer> renderers = new List<INodeRenderer>();
 
-		public void Register(IRenderer renderer)
+		public void RegisterNodeRenderer(INodeRenderer renderer)
 		{
 			var existing = renderers.FindIndex(x => x.Name == renderer.Name);
 			if (existing >= 0) renderers.RemoveAt(existing);
@@ -64,68 +91,110 @@
 
 		public void Register<TView, TImpl>() where TImpl : TView
 		{
-			this.Register(new XmlRenderer<TView, TImpl>());
+			this.RegisterNodeRenderer(new NodeRenderer<TView, TImpl>(this));
 		}
 
-		private IRenderer GetRenderer(string name) => this.renderers.FirstOrDefault(x => x.Name == name);
+		protected INodeRenderer GetRenderer(string name) 
+		{
+			var result = this.renderers.FirstOrDefault(x => x.Name == name);
+			if (result == null)
+				throw new InvalidOperationException($"No renderer found for '{name}'");
+			return result;
+		}
 
 		#endregion
 
-		#region Value Parsing
+		#region Value conversion
 
-		private Dictionary<Type, IValueParser> valueParsers = new Dictionary<Type, IValueParser>();
+		private List<IValueConverter> valueConverters = new List<IValueConverter>();
 
-		public void RegisterValueParser<T>(IValueParser<T> parser)
+		public void RegisterConverter<TSource,TDestination>(IValueConverter<TSource, TDestination> converter)
 		{
-			this.valueParsers[typeof(T)] = parser;
-		}
+			var existing = this.valueConverters.FindIndex(x => x.SourceType == typeof(TSource) && x.DestinationType == typeof(TDestination));
+			if (existing >= 0) valueConverters.RemoveAt(existing);
+			this.valueConverters.Add(converter);
 
-		public object ParseValue(string value, Type type)
-		{
-			if(string.IsNullOrEmpty(value))
+			if(!typeof(TDestination).IsArray)
 			{
-				if (type.GetTypeInfo().IsValueType)
+				if(!this.valueConverters.Any(x => x.SourceType == typeof(TDestination) && x.DestinationType == typeof(TDestination[])))
 				{
-					return Activator.CreateInstance(type);
+					this.valueConverters.Add(ArrayConverters.FromSingleItem<TDestination>());
 				}
-				return null;
 			}
-
-			object result;
-
-			IValueParser parser;
-			if (this.valueParsers.TryGetValue(type, out parser) && parser.TryParse(value, out result))
-			{
-				return result;
-			}
-
-			throw new InvalidOperationException($"Failed to parse {type} value '{value}'");
 		}
 
-		#endregion
 
-		#region Node parsing
-
-		private YogaNode Parse(XElement node)
+		private IValueConverter FindConverter(Type tsource, Type tdestination)
 		{
-			var inode = new XmlNode(this, node);
+			var destinations = this.valueConverters.Where(x => x.DestinationType == tdestination);
+			if (!destinations.Any())
+				return null;
 
-			var result = nodeRenderer.Render(inode);
+			var converter = destinations.FirstOrDefault(x => x.SourceType == tsource);
+			if (converter != null)
+				return converter;
 
-			if (renderers == null)
-				throw new InvalidOperationException($"No renderer found for '{node.Name.LocalName}'");
-
-			var dataRenderer = this.GetRenderer(node.Name.LocalName);
-			result.Data = dataRenderer.Render(inode);
-
-			foreach (var item in node.Elements())
+			foreach (var item in destinations)
 			{
-				var child = Parse(item);
-				result.Insert(result.Count, child);
+				converter = FindConverter(tsource, item.SourceType);
+				if (converter != null)
+					return new ChainValueConverter(converter, item);
 			}
+
+			return null;
+		}
+
+		public IValueConverter GetConverter(Type tsource, Type tdestination)
+		{
+			var result = FindConverter(tsource, tdestination);
+			if (result == null)
+				throw new InvalidOperationException($"No converter found from '{tsource}' to '{tdestination}'");
+			return result;
+		}
+
+		public IValueConverter<TSource, TDestination> GetConverter<TSource,TDestination>()
+		{
+			return (IValueConverter<TSource, TDestination>)this.GetConverter(typeof(TSource), typeof(TDestination));
+		}
+
+		private (bool success, object result) TryConvertValue(object v, Type destination)
+		{
+			if (v == null)
+			{
+				return (true, (destination.GetTypeInfo().IsValueType) ? Activator.CreateInstance(destination) : null);
+			}
+
+			if (v.GetType() == destination)
+				return (true, v);
+
+			var converter = this.GetConverter(v.GetType(), destination);
+
+			return converter.TryParse(v);
+		}
+
+		public object ConvertValue(object v, Type destination)
+		{
+			var (success, result) = TryConvertValue(v, destination);
+
+			if (!success)
+				throw new ArgumentException($"Conversion failed from '{v.GetType()}' to '{destination}' : invalid input {v}");
 
 			return result;
 		}
+
+		public object ConvertValue(object v, params Type[] destinations)
+		{
+			foreach (var type in destinations)
+			{
+				var (success, result) = TryConvertValue(v, type);
+				if (success)
+					return result;
+			}
+
+			throw new ArgumentException($"Conversion failed from '{v.GetType()}' to one of '{string.Join<Type>(", ", destinations)}' : invalid input {v}");
+		}
+
+		public abstract void Write(Stream stream, INode node);
 
 		#endregion
 	}

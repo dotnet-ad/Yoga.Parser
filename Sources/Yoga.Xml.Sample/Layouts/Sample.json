@@ -1,0 +1,51 @@
+﻿{
+  "Type": "View",
+  "Background": "White",
+  "Padding" : 20,
+  "Children": [
+    {
+      "Type": "View",
+      "Background": "Gray",
+      "Height": 200
+    },
+    {
+      "Type": "View",
+      "Id" :  "centerView",
+      "Background": "Green",
+      "FlexGrow": 1,
+      "Padding": 10,
+      "FlexDirection": "Row",
+      "Children": [
+        {
+          "Type": "View",
+          "Background": "Black",
+          "Width": 20,
+          "Height": 20,
+          "Margin": 10
+        },
+        {
+          "Type": "View",
+          "Background": "Black",
+          "FlexGrow": 1,
+          "AlignSelf": "FlexEnd",
+          "Height": 20,
+          "Margin": 10
+        },
+        {
+          "Type": "View",
+          "Background": "Black",
+          "Width": 20,
+          "Height": 20,
+          "Margin": 10
+        }
+      ]
+    },
+    {
+      "Type": "View",
+      "Background": "Black",
+      "FlexGrow": 1,
+      "AlignSelf" :  "Center",
+      "Width": "100"
+    }
+  ]
+}
