@@ -1,4 +1,4 @@
-# Yoga.Xml
+# Yoga.Parser
 
 Declare your [Yoga](https://facebook.github.io/yoga/) layouts in XML.
 
@@ -6,7 +6,7 @@ Declare your [Yoga](https://facebook.github.io/yoga/) layouts in XML.
 
 Available on NuGet
 
-[![NuGet](https://img.shields.io/nuget/v/Yoga.Xml.svg?label=NuGet)](https://www.nuget.org/packages/Yoga.Xml/)
+[![NuGet](https://img.shields.io/nuget/v/Yoga.Parser.svg?label=NuGet)](https://www.nuget.org/packages/Yoga.Parser/)
 
 ## Quick-start (Xamarin.iOS)
 
