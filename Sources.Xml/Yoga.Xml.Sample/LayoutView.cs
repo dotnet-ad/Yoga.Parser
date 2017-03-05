@@ -11,6 +11,7 @@
 		{
 			this.parser = new YogaParser();
 			this.parser.RegisterValueParser(new YogaValueParser(density));
+			this.parser.RegisterValueParser(new ColorParser());
 		}
 
 		public void Load(string name)

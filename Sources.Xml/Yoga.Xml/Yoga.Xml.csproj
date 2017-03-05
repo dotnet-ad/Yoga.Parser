@@ -38,9 +38,12 @@
     <Compile Include="ValueParsers\ValueParser.cs" />
     <Compile Include="IYogaParser.cs" />
     <Compile Include="YogaParserExtensions.cs" />
-    <Compile Include="Renderers\IXmlRenderer.cs" />
-    <Compile Include="Renderers\XmlRenderer.cs" />
+    <Compile Include="Renderers\IRenderer.cs" />
+    <Compile Include="Renderers\Renderer.cs" />
     <Compile Include="ValueParsers\ArrayParser.cs" />
+    <Compile Include="Nodes\INode.cs" />
+    <Compile Include="Nodes\XmlNode.cs" />
+    <Compile Include="Renderers\YogaNodeRenderer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Facebook.Yoga">
@@ -53,6 +56,7 @@
   <ItemGroup>
     <Folder Include="ValueParsers\" />
     <Folder Include="Renderers\" />
+    <Folder Include="Nodes\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
 </Project>

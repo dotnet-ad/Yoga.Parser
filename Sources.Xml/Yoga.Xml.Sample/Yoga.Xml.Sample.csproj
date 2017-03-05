@@ -34,6 +34,7 @@
     <Compile Include="Base\Rectangle.cs" />
     <Compile Include="Base\Color.cs" />
     <Compile Include="Renderers\ViewRenderer.cs" />
+    <Compile Include="ValueParsers\ColorParser.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Layouts\Sample.xml" />
@@ -42,6 +43,7 @@
     <Folder Include="Layouts\" />
     <Folder Include="Base\" />
     <Folder Include="Renderers\" />
+    <Folder Include="ValueParsers\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Yoga.Xml\Yoga.Xml.csproj">

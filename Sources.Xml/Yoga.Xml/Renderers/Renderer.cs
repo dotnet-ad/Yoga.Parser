@@ -1,11 +1,10 @@
 ﻿namespace Yoga.Xml
 {
 	using System;
-	using System.Xml.Linq;
 
-	public abstract class XmlRenderer<T> : IXmlRenderer
+	public abstract class Renderer<T> : IRenderer
 	{
-		public XmlRenderer(string name = null)
+		public Renderer(string name = null)
 		{
 			if (name == null)
 			{
@@ -18,24 +17,20 @@
 			this.Type = typeof(T);
 
 			this.Name = name;
-
 		}
 
 		public string Name { get; }
 
 		public Type Type { get; }
 
-		public virtual T Render(XElement node)
-		{
-			return (T)Activator.CreateInstance(typeof(T));
-		}
+		public virtual T Render(INode node) => (T)Activator.CreateInstance(typeof(T));
 
-		object IXmlRenderer.Render(XElement node) => this.Render(node);
+		object IRenderer.Render(INode node) => this.Render(node);
 	}
 
-	public class XmlRenderer<T, TImpl> : XmlRenderer<T> where TImpl : T
+	public class XmlRenderer<T, TImpl> : Renderer<T> where TImpl : T
 	{
-		public override T Render(XElement node)
+		public override T Render(INode node)
 		{
 			return (T)Activator.CreateInstance(typeof(TImpl));
 		}
