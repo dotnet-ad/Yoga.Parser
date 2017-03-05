@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Yoga.Parser</id>
+    <version>0.5.0</version>
+    <authors>Aloïs Deniel</authors>
+    <owners>Aloïs Deniel</owners>
+    <licenseUrl>https://github.com/aloisdeniel/Yoga.Parser/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/aloisdeniel/Yoga.Parser</projectUrl>
+    <iconUrl>https://facebook.github.io/yoga/static/logo.svg</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Declare your Yoga layouts in XML or JSON.</description>
+    <copyright>Copyright 2017</copyright>
+    <tags>xamarin yoga layout</tags>
+    <dependencies>
+      <dependency id="Facebook.Yoga" version="1.3.0-pre1" />
+      <dependency id="Newtonsoft.Json" version="10.0.2" />
+      <dependency id="System.ValueTuple" version="4.3.1" />
+    </dependencies>
+  </metadata>
+  <files>
+     <file src="..\Sources\Yoga.Parser\bin\Release\Yoga.Parser.dll" target="lib\portable-net45+win8+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Yoga.Parser.dll" />
+     <file src="..\Sources\Yoga.Parser\bin\Release\Yoga.Parser.dll" target="lib\netstandard1.1\Yoga.Parser.dll" />
+  </files>
+</package>

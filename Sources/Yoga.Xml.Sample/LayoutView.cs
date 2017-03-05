@@ -12,7 +12,7 @@
 			this.parser.RegisterConverter(ColorConverters.FromString());
 		}
 
-		public void Load(string name)
+		public void LoadFromAssembly(string name)
 		{
 			this.Id = name;
 			var assembly = typeof(LayoutView).GetTypeInfo().Assembly;

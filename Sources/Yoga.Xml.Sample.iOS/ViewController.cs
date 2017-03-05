@@ -50,7 +50,7 @@
 
 			this.layout = new LayoutView(parser);
 			this.layout.RegisterRenderer<IView, YogaView>();
-			this.layout.Load($"Sample.{ext}");
+			this.layout.LoadFromAssembly($"Sample.{ext}");
 
  			foreach (var view in this.layout.Views)
 			{

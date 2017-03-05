@@ -68,7 +68,7 @@
 
 			this.layout = new LayoutView(2f);
 			this.layout.RegisterRenderer<IView, YogaView>();
-			this.layout.Load("Sample.xml");
+			this.layout.LoadFromAssembly("Sample.xml");
 			this.Layout();
 		}
 
