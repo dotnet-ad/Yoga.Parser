@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{DE89540D-70FB-4F1B-B78D-C149F913E540}</ProjectGuid>
+    <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <UseMSBuildEngine>true</UseMSBuildEngine>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Yoga.Xml.Sample</RootNamespace>
+    <AssemblyName>Yoga.Xml.Sample</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Profile111</TargetFrameworkProfile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="IView.cs" />
+    <Compile Include="LayoutView.cs" />
+    <Compile Include="Base\Rectangle.cs" />
+    <Compile Include="Base\Color.cs" />
+    <Compile Include="Renderers\ViewRenderer.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Layouts\Sample.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Layouts\" />
+    <Folder Include="Base\" />
+    <Folder Include="Renderers\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Yoga.Xml\Yoga.Xml.csproj">
+      <Project>{AA25C6C3-B054-41AC-86CA-F10BFDC52BBB}</Project>
+      <Name>Yoga.Xml</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Facebook.Yoga">
+      <HintPath>..\packages\Facebook.Yoga.1.3.0-pre1\lib\netstandard\Facebook.Yoga.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
+</Project>
