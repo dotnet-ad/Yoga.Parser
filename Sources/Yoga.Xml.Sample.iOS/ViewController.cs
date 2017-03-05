@@ -12,7 +12,7 @@
 		{
 			public string Id { get; set; }
 
-			Color IView.BackgroundColor 
+			Color IView.Background 
 			{ 
 				get
 				{

@@ -4,12 +4,9 @@
 		where TView : IView
 		where TImpl : TView
 	{
-		public override TView Render(INode node)
+		public ViewRenderer()
 		{
-			var view = base.Render(node);
-			view.Id = node.Get<string>("Id");
-			view.BackgroundColor = node.Get<Color>("Background");
-			return view;
+			this.RegisterAllTypeProperties(nameof(IView.Frame));
 		}
 	}
 }

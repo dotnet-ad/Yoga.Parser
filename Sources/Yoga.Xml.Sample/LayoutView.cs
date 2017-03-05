@@ -58,7 +58,7 @@
 			}
 		}
 
-		Color IView.BackgroundColor { get; set; }
+		Color IView.Background { get; set; }
 
 		public IEnumerable<IView> Views => views;
 

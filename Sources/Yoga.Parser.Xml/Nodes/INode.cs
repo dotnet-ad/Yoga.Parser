@@ -9,6 +9,8 @@
 
 		IEnumerable<string> Properties { get; }
 
+		bool Has(string name);
+
 		object Get(string name, Type type);
 	}
 

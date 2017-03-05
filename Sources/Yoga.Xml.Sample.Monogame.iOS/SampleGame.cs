@@ -15,7 +15,7 @@
 
 			public Sample.Rectangle Frame { get; set; }
 
-			Sample.Color IView.BackgroundColor 
+			Sample.Color IView.Background 
 			{
 				get => new Sample.Color(this.backgroundColor.R, this.backgroundColor.G, this.backgroundColor.B);
 				set => this.backgroundColor = new Color(value.R, value.G, value.B); 

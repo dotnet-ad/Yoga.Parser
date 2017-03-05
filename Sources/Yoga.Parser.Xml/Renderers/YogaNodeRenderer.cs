@@ -1,53 +1,38 @@
 ﻿namespace Yoga.Parser
 {
-	using System.Collections.Generic;
-	using System.Linq;
-	using System.Reflection;
 	using Facebook.Yoga;
 
 	public class YogaNodeRenderer : Renderer<YogaNode>
 	{
-		#region Property caching
-
-		private static Dictionary<string, PropertyInfo> nodePropertySetters = typeof(YogaNode).GetRuntimeProperties()
-																					 .ToDictionary(x => x.Name, x => x);
-
-		#endregion
-
-		public override YogaNode Render(INode node)
+		public YogaNodeRenderer()
 		{
-			var result = base.Render(node);
+			this.RegisterAllTypeProperties();
+		}
 
-			foreach (var p in node.Properties)
+		protected override bool TryRenderProperty(YogaNode instance, string name, INode node)
+		{
+			switch (name)
 			{
-				switch (p)
-				{
-					case nameof(result.Padding):
-						var padding = node.Get<YogaValue[]>(p);
-						result.PaddingLeft = padding[0];
-						result.PaddingTop = padding[1];
-						result.PaddingRight = padding[2];
-						result.PaddingBottom = padding[3];
-						break;
-					case nameof(result.Margin):
-						var margin = node.Get<YogaValue[]>(p);
-						result.MarginLeft = margin[0];
-						result.MarginTop = margin[1];
-						result.MarginRight = margin[2];
-						result.MarginBottom = margin[3];
-						break;
-					default:
-						PropertyInfo property;
-						if(nodePropertySetters.TryGetValue(p, out property))
-						{
-							var v = node.Get(p, property.PropertyType);
-							property.SetValue(result, v);
-						}
-						break;
-				}
-			}
+				case nameof(instance.Padding):
+					var padding = node.Get<YogaValue[]>(name);
+					instance.PaddingLeft = padding[0];
+					instance.PaddingTop = padding[1];
+					instance.PaddingRight = padding[2];
+					instance.PaddingBottom = padding[3];
+					return true;
 
-			return result;
+				case nameof(instance.Margin):
+					var margin = node.Get<YogaValue[]>(name);
+					instance.MarginLeft = margin[0];
+					instance.MarginTop = margin[1];
+					instance.MarginRight = margin[2];
+					instance.MarginBottom = margin[3];
+					return true;
+
+				default:
+					return base.TryRenderProperty(instance, name, node);
+				
+			}
 		}
 	}
 }

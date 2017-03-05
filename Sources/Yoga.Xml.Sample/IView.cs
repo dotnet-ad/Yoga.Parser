@@ -6,6 +6,6 @@
 
 		Rectangle Frame { get; set; }
 
-		Color BackgroundColor { get; set; }
+		Color Background { get; set; }
 	}
 }
